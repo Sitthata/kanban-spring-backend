@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import sit.kmutt.kanbanspringbackend.model.authentication.User;
 import sit.kmutt.kanbanspringbackend.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,10 @@ public class UserService {
         String hashedPassword = hashPassword(user.getPassword());
         user.setPassword(hashedPassword);
         return userRepository.save(user);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public User findByEmail(String email) {
