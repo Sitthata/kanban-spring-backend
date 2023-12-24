@@ -2,6 +2,7 @@ package sit.kmutt.kanbanspringbackend.controller;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         User user = userService.findByEmail(loginRequest.getEmail());
         if (user != null && argon.verify(user.getPassword(), loginRequest.getPassword().toCharArray())) {
+            request.setAttribute("currentUser", user);
             return ResponseEntity.ok("User Authenticated successfully");
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
